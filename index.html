@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gửi Điều Ước Vào Vũ Trụ - Manifestation Space</title>
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Quicksand', sans-serif;
+        }
+        body {
+            background: radial-gradient(ellipse at bottom, #1b2735 0%, #090a0f 100%);
+            color: #fff;
+            min-height: 100vh;
+            overflow-x: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 2rem 1rem;
+            position: relative;
+        }
+        
+        /* Hiệu ứng nền bầu trời sao */
+        .stars {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+        .star {
+            position: absolute;
+            background: #ffffff;
+            border-radius: 50%;
+            animation: twinkle var(--duration) infinite ease-in-out;
+        }
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.2; transform: scale(0.8); }
+            50% { opacity: 1; transform: scale(1.2); }
+        }
+        
+        .container {
+            position: relative;
+            z-index: 1;
+            max-width: 700px;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 24px;
+            padding: 2.5rem;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        
+        h1 {
+            font-size: 2.2rem;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(135deg, #ff9a9e 0%, #fad0c4 99%, #fad0c4 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: 700;
+        }
+        
+        p.subtitle {
+            color: #d1d5db;
+            font-size: 1.05rem;
+            margin-bottom: 2rem;
+            line-height: 1.6;
+        }
+        
+        .form-group {
+            margin-bottom: 1.5rem;
+            text-align: left;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: #e5e7eb;
+        }
+        
+        select, textarea {
+            width: 100%;
+            padding: 1rem;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 12px;
+            color: #fff;
+            font-size: 1rem;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+        
+        select option {
+            background: #1b2735;
+            color: #fff;
+        }
+        
+        textarea {
+            resize: vertical;
+            min-height: 120px;
+        }
+        
+        select:focus, textarea:focus {
+            border-color: #a78bfa;
+            box-shadow: 0 0 15px rgba(167, 139, 250, 0.3);
+        }
+        
+        .btn-send {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 1rem 2.5rem;
+            font-size: 1.1rem;
+            font-weight: 600;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.4);
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .btn-send:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 25px rgba(102, 126, 234, 0.6);
+        }
+        
+        .btn-send:active {
+            transform: translateY(-1px);
+        }
+        
+        /* Danh sách điều ước */
+        .wishes-section {
+            position: relative;
+            z-index: 1;
+            max-width: 700px;
+            width: 100%;
+        }
+        
+        .wishes-section h2 {
+            font-size: 1.5rem;
+            margin-bottom: 1.2rem;
+            color: #f3f4f6;
+            text-align: center;
+        }
+        
+        .wish-card {
+            background: rgba(255, 255, 255, 0.04);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 16px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            position: relative;
+            animation: fadeIn 0.5s ease;
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.2);
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(15px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .wish-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.8rem;
+            font-size: 0.9rem;
+        }
+        
+        .wish-category {
+            background: rgba(167, 139, 250, 0.2);
+            color: #c4b5fd;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-weight: 500;
+        }
+        
+        .wish-date {
+            color: #9ca3af;
+        }
+        
+        .wish-content {
+            font-size: 1.05rem;
+            line-height: 1.5;
+            color: #f9fafb;
+            word-break: break-word;
+        }
+
+        /* Thông báo thành công */
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: rgba(16, 185, 129, 0.9);
+            color: white;
+            padding: 1rem 1.5rem;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+            backdrop-filter: blur(5px);
+            z-index: 1000;
+            display: none;
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="stars" id="starsContainer"></div>
+
+    <div class="notification" id="notification">✨ Điều ước của bạn đã được gửi bay vào vũ trụ thành công!</div>
+
+    <div class="container">
+        <h1>Gửi Điều Ước Vào Vũ Trụ</h1>
+        <p class="subtitle">Viết xuống mong muốn của bạn dưới dạng thì hiện tại (như thể nó đã thành hiện thực), chọn danh mục và phóng nó vào không gian vô tận.</p>
+        
+        <form id="manifestForm">
+            <div class="form-group">
+                <label for="category">✨ Lĩnh vực mong muốn</label>
+                <select id="category" required>
+                    <option value="Sự nghiệp & Tài chính">💼 Sự nghiệp & Tài chính</option>
+                    <option value="Tình yêu & Mối quan hệ">💖 Tình yêu & Mối quan hệ</option>
+                    <option value="Sức khỏe & Bình an">🌿 Sức khỏe & Bình an</option>
+                    <option value="Phát triển bản thân">🚀 Phát triển bản thân</option>
+                    <option value="Điều kỳ diệu khác">🌟 Điều kỳ diệu khác</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="wishText">✍️ Viết điều ước của bạn (VD: "Tôi vô cùng biết ơn vì...")</label>
+                <textarea id="wishText" placeholder="Hãy viết chi tiết và bằng cảm xúc chân thành nhất..." required></textarea>
+            </div>
+            
+            <button type="submit" class="btn-send">
+                <span>Gửi Vào Vũ Trụ</span>
+                <span>🚀</span>
+            </button>
+        </form>
+    </div>
+
+    <div class="wishes-section">
+        <h2>🌌 Vũ Trụ Của Riêng Bạn (Đã Lưu)</h2>
+        <div id="wishesList"></div>
+    </div>
+
+    <script>
+        // Tạo các hạt sao lấp lánh ngẫu nhiên
+        const starsContainer = document.getElementById('starsContainer');
+        const starCount = 120;
+        
+        for (let i = 0; i < starCount; i++) {
+            const star = document.createElement('div');
+            star.classList.add('star');
+            const size = Math.random() * 3 + 1;
+            star.style.width = `${size}px`;
+            star.style.height = `${size}px`;
+            star.style.top = `${Math.random() * 100}%`;
+            star.style.left = `${Math.random() * 100}%`;
+            star.style.setProperty('--duration', `${Math.random() * 3 + 2}s`);
+            star.style.animationDelay = `${Math.random() * 5}s`;
+            starsContainer.appendChild(star);
+        }
+
+        // Quản lý form và localStorage
+        const manifestForm = document.getElementById('manifestForm');
+        const wishText = document.getElementById('wishText');
+        const categorySelect = document.getElementById('category');
+        const wishesList = document.getElementById('wishesList');
+        const notification = document.getElementById('notification');
+
+        function loadWishes() {
+            const wishes = JSON.parse(localStorage.getItem('cosmic_wishes') || '[]');
+            wishesList.innerHTML = '';
+            
+            if (wishes.length === 0) {
+                wishesList.innerHTML = '<p style="text-align: center; color: #9ca3af; font-style: italic;">Chưa có điều ước nào được gửi. Hãy viết điều ước đầu tiên của bạn!</p>';
+                return;
+            }
+
+            wishes.forEach((wish) => {
+                const card = document.createElement('div');
+                card.classList.add('wish-card');
+                card.innerHTML = `
+                    <div class="wish-header">
+                        <span class="wish-category">${wish.category}</span>
+                        <span class="wish-date">${wish.date}</span>
+                    </div>
+                    <div class="wish-content">${escapeHTML(wish.text)}</div>
+                `;
+                wishesList.appendChild(card);
+            });
+        }
+
+        function showNotification() {
+            notification.style.display = 'block';
+            setTimeout(() => {
+                notification.style.display = 'none';
+            }, 3000);
+        }
+
+        function escapeHTML(str) {
+            return str.replace(/[&<>'"]/g, 
+                tag => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[tag] || tag)
+            );
+        }
+
+        manifestForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const text = wishText.value.trim();
+            const category = categorySelect.value;
+            
+            if (!text) return;
+
+            const now = new Date();
+            const dateStr = now.toLocaleDateString('vi-VN', { day: '2-digit', month: '2-digit', year: 'numeric' });
+
+            const newWish = {
+                text,
+                category,
+                date: dateStr
+            };
+
+            const wishes = JSON.parse(localStorage.getItem('cosmic_wishes') || '[]');
+            wishes.unshift(newWish);
+            localStorage.setItem('cosmic_wishes', JSON.stringify(wishes));
+
+            wishText.value = '';
+            loadWishes();
+            showNotification();
+        });
+
+        loadWishes();
+    </script>
+</body>
+  </html>
+                                     
